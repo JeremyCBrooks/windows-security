@@ -1,7 +1,7 @@
 #neuters Responder by disabling SMBv1, forcing SMB signing, disabling LLMNR and disabling NTB-NS
 #enter a list of hostnames or IP addresses where you want the script to run (the script will also run locally)
 #example:
-#./ignorer.ps1 '192.168.1.2','192.168.1.3'
+#./ignorer.ps1 -hosts '192.168.1.2','192.168.1.3'
 
 param([String[]]$hosts)
 
