@@ -1,3 +1,10 @@
+#neuters Responder by disabling SMBv1, forcing SMB signing, disabling LLMNR and disabling NTB-NS
+#enter a list of hostnames or IP addresses where you want the script to run (the script will also run locally)
+#example:
+#./ignorer.ps1 '192.168.1.2','192.168.1.3'
+
+param([String[]]$hosts)
+
 #enable remoting
 winrm quickconfig
 Enable-PSRemoting -Force
@@ -8,9 +15,9 @@ try{
 	Set-Item wsman:\localhost\client\trustedhosts *
 	Restart-Service WinRM
 
-	#get administrator login that will work on all remote machines
+	#provide an Administrator credential that will work on all remote hosts
 	$cred=Get-Credential
-	$machines='host1','host2'#enter a list of hostnames or IP addresses
+
 	$scripts='Get-SmbClientConfiguration',#show current smb client config
 			 'Get-SmbServerConfiguration',#show current smb server config
 			 'Set-SmbClientConfiguration -EnableInsecureGuestLogons $false -EnableSecuritySignature $true -RequireSecuritySignature $true',#disable guest login and force signing
