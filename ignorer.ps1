@@ -3,7 +3,7 @@
 #example:
 #./ignorer.ps1 -hosts '192.168.1.2','192.168.1.3'
 
-param([String[]]$hosts)
+param([Parameter(Position=0)][String[]]$hosts)
 
 #enable remoting
 winrm quickconfig
@@ -24,15 +24,15 @@ try{
 			 'Set-SmbServerConfiguration -EnableSMB1Protocol $false -EnableSecuritySignature $true -RequireSecuritySignature $true',#disable guest login and force signing
 			 'REG ADD "HKLM\Software\policies\Microsoft\Windows NT\DNSClient" /f',
 			 'REG ADD "HKLM\Software\policies\Microsoft\Windows NT\DNSClient" /v "EnableMulticast" /t REG_DWORD /d "0" /f',#disable LLMNR
-			 '(Get-WmiObject win32_networkadapterconfiguration).ForEach({$_.SetTcpIpNetbios(2)})'#disable NetBios (NTB-NS)
+			 '(Get-WmiObject win32_networkadapterconfiguration).ForEach({$_.SetTcpIpNetbios(2)})'#disable NetBios
 			 
-	#run on remote machines
-	foreach($machine in $machines){
+	#run on remote hosts
+	foreach($h in $hosts){
 	 try{
 	  foreach($script in $scripts){
 	   $sb = [Scriptblock]::Create($script)
 	   $sb
-	   Invoke-Command -ComputerName $machine -Credential $cred -ScriptBlock $sb
+	   Invoke-Command -ComputerName $h -Credential $cred -ScriptBlock $sb
 	  }
 	 }
 	 catch{}
