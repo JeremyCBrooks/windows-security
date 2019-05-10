@@ -1,2 +1,2 @@
 # windows_security
-Random scripts you can use to harden Windows machine
+Random scripts you can use to harden Windows machines
